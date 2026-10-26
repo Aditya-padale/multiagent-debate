@@ -7,17 +7,17 @@ Model: qwen/qwen3.8-27b
 import os
 import json
 import re
+from pathlib import Path
 from flask import Flask, Response, request, jsonify, send_from_directory
 from flask_cors import CORS
 from groq import Groq
 from dotenv import load_dotenv
 
-load_dotenv()
+BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 
-app = Flask(__name__, static_folder=".")
+app = Flask(__name__, static_folder=str(BASE_DIR))
 CORS(app)
-
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # Model available to the configured Groq account.
 MODEL = "qwen/qwen3.8-27b"
@@ -25,6 +25,7 @@ MODEL = "qwen/qwen3.8-27b"
 
 def call_groq(prompt: str) -> str:
     """Send a prompt to Groq and return the raw text response."""
+    client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
     completion = client.chat.completions.create(
         model=MODEL,
         messages=[{"role": "user", "content": prompt}],
@@ -111,7 +112,7 @@ def build_reply_prompt(text: str, ids: list, question: str) -> str:
 
 @app.route("/")
 def index():
-    return send_from_directory(".", "index.html")
+    return send_from_directory(BASE_DIR, "index.html")
 
 
 @app.route("/favicon.ico")

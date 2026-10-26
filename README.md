@@ -35,6 +35,8 @@ The app uses a single-page HTML frontend, a small Flask API, and Groq's Qwen mod
 multiagent debate 2/
 ├── index.html       # Complete frontend: HTML, CSS, JavaScript, and inline SVG avatars
 ├── server.py        # Flask server and Groq API proxy
+├── api/index.py     # Vercel serverless entrypoint
+├── vercel.json      # Vercel routing configuration
 ├── requirements.txt # Python dependencies
 └── .env             # Local environment variables; do not commit this file
 ```
@@ -69,6 +71,14 @@ multiagent debate 2/
    ```
 
 4. Open [http://localhost:5000](http://localhost:5000) in a browser.
+
+## Deploy to Vercel
+
+1. Import this repository into Vercel.
+2. Add `GROQ_API_KEY` under the project Environment Variables.
+3. Deploy with the default settings. The `api/index.py` function serves both the frontend and `/api/*` routes.
+
+The local `.env` file is only for development; configure the key in Vercel instead of committing it.
 
 The server serves `index.html` at `/` and exposes the API routes described below. Opening the HTML file directly is not recommended because the live API is designed to run through Flask.
 
